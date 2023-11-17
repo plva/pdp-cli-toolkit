@@ -37,6 +37,11 @@ fi
 # Save the new custom section to a temporary file
 TEMP_FILE="/tmp/custom_scripts_section.tmp"
 echo "# Generated code, do not modify" >> "${TEMP_FILE}"
+CLI_HELPERS_DIR="/Users/paulvasiu/dev/repos/cli-helpers"
+
+
+echo "# \`b\` stands for build" >> "${TEMP_FILE}"
+echo "alias b=\"cd ${CLI_HELPERS_DIR} && ./setup.sh || cd - && s\"" >> "${TEMP_FILE}"
 for script_name in $(ls -1); do
   echo "source ${custom_scripts_dir}/${script_name}" >> "${TEMP_FILE}"
 done
@@ -48,5 +53,5 @@ sed -i.bak -e "/${START_TAG}/r ${TEMP_FILE}" ~/.zshrc
 source ~/.zshrc
 
 rm ${TEMP_FILE}
-echo "Custom scripts setup complete."
+echo "Finished setting up custom scripts."
 
