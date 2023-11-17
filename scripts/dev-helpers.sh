@@ -35,11 +35,25 @@ pdp_add_repo_to_project_config() {
   fi
 }
 
-
 # FUNCTION_DOCUMENTATION_START
 # - Get the current pdp project configuration 
 # todo: create a better view and options for this 
 # FUNCTION_DOCUMENTATION_END
 pdp_get_project_config() {
   cat ${PROJECT_CONFIG_PATH} | jq
+}
+
+# FUNCTION_DOCUMENTATION_START
+# - Get the project git status (as well as git log) for all repos in the current pdp project config
+# FUNCTION_DOCUMENTATION_END
+pdp_get_project_git_status() {
+  pdp_get_project_config | jq '.repos[]' | xargs -I {} zsh -ic 'echo "\n\nIN {}\n" && cd {} && gst && glog | cat'
+}
+
+# FUNCTION_DOCUMENTATION_START
+# - Commits all the repos with the same commit message
+# FUNCTION_DOCUMENTATION_END
+pdp_commit_all_with_message() {
+  local commit_message=$1
+  pdp_get_project_config| jq '.repos[]' | xargs -I {} zsh -ic "echo \"\n\nIN {}\n\" && cd {} && gaa && gc -m \"${commit_message}\""\n
 }
