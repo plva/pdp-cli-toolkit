@@ -41,7 +41,7 @@ CLI_HELPERS_DIR="/Users/paulvasiu/dev/repos/cli-helpers"
 
 
 echo "# \`b\` stands for build" >> "${TEMP_FILE}"
-echo "alias b=\"cd ${CLI_HELPERS_DIR} && ./setup.sh || cd - && s\"" >> "${TEMP_FILE}"
+echo "alias b=\"cd ${CLI_HELPERS_DIR} && ./setup.sh; cd - && s\"" >> "${TEMP_FILE}"
 for script_name in $(ls -1); do
   echo "source ${custom_scripts_dir}/${script_name}" >> "${TEMP_FILE}"
 done
