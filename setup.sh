@@ -7,51 +7,64 @@
 #
 # DOCUMENTATION_END
 
-# Define the directory where custom helper scripts will be stored
-custom_scripts_dir="$HOME/custom-helper-scripts"
+source setup/setup-git.sh
+setup_custom_scripts() {
+  # Define the directory where custom helper scripts will be stored
+  custom_scripts_dir="$HOME/custom-helper-scripts"
 
-# Create the custom scripts directory if it doesn't exist
-mkdir -p "${custom_scripts_dir}"
+  # Create the custom scripts directory if it doesn't exist
+  mkdir -p "${custom_scripts_dir}"
 
-SCRIPTS_DIR="scripts"
-cd ${SCRIPTS_DIR}
+  SCRIPTS_DIR="scripts"
+  cd ${SCRIPTS_DIR}
 
-# Copy your custom scripts into the custom scripts directory
-cp * "${custom_scripts_dir}"
+  # Copy your custom scripts into the custom scripts directory
+  cp * "${custom_scripts_dir}"
 
-START_TAG="# CUSTOM_SCRIPTS_START"
-END_TAG="# CUSTOM_SCRIPTS_END"
+  START_TAG="# CUSTOM_SCRIPTS_START"
+  END_TAG="# CUSTOM_SCRIPTS_END"
 
-# Check if the custom section exists in .zshrc
-if ! grep -q "${START_TAG}" ~/.zshrc; then
-  # If it doesn't exist, create it at the end of the file
-  echo >> ~/.zshrc
-  echo "${START_TAG}" >> ~/.zshrc
-  echo "${END_TAG}" >> ~/.zshrc
-else
-  # Remove the existing content between ${START_TAG} and ${END_TAG}
-  sed -i.bak "/${START_TAG}/,/${END_TAG}/{//!d;}" ~/.zshrc
-fi
-
-
-# Save the new custom section to a temporary file
-TEMP_FILE="/tmp/custom_scripts_section.tmp"
-echo "# Generated code, do not modify" >> "${TEMP_FILE}"
-CLI_HELPERS_DIR="/Users/paulvasiu/dev/repos/cli-helpers"
+  # Check if the custom section exists in .zshrc
+  if ! grep -q "${START_TAG}" ~/.zshrc; then
+    # If it doesn't exist, create it at the end of the file
+    echo >> ~/.zshrc
+    echo "${START_TAG}" >> ~/.zshrc
+    echo "${END_TAG}" >> ~/.zshrc
+  else
+    # Remove the existing content between ${START_TAG} and ${END_TAG}
+    sed -i.bak "/${START_TAG}/,/${END_TAG}/{//!d;}" ~/.zshrc
+  fi
 
 
-echo "# \`b\` stands for build" >> "${TEMP_FILE}"
-echo "alias b=\"cd ${CLI_HELPERS_DIR} && ./setup.sh; cd - && s\"" >> "${TEMP_FILE}"
-for script_name in $(ls -1); do
-  echo "source ${custom_scripts_dir}/${script_name}" >> "${TEMP_FILE}"
-done
+  # Save the new custom section to a temporary file
+  TEMP_FILE="/tmp/custom_scripts_section.tmp"
+  echo "# Generated code, do not modify" >> "${TEMP_FILE}"
+  CLI_HELPERS_DIR="/Users/paulvasiu/dev/pdp-cli-toolkit"
+  PDP_BOOTSTRAP_DIR="/Users/paulvasiu/dev/pdp-bootstrap"
 
-# Replace everything between #CUSTOM_SCRIPTS_START and #CUSTOM_SCRIPTS_END with the temp file contents
-sed -i.bak -e "/${START_TAG}/r ${TEMP_FILE}" ~/.zshrc
+  echo "# \`b\` stands for build" >> "${TEMP_FILE}"
+  echo "alias b=\"cd ${CLI_HELPERS_DIR} && ./setup.sh; cd - && s\"" >> "${TEMP_FILE}"
+  echo "alias ba=\"cd ${PDP_BOOTSTRAP_DIR} && ./bootstrap.sh; cd - && b\"" >> "${TEMP_FILE}"
 
-# Source your .zshrc to apply the changes immediately
-source ~/.zshrc
+  echo 'export PATH="${PATH}:/Users/paulvasiu/Library/Python/3.9/bin/"' >> "${TEMP_FILE}"
+  echo 'export PYTHONPATH="${PYTHONPATH}:/Users/paulvasiu/Library/Python/3.9/bin/"' >> "${TEMP_FILE}"
+  
+  for script_name in $(ls -1); do
+    echo "source ${custom_scripts_dir}/${script_name}" >> "${TEMP_FILE}"
+  done
 
-rm ${TEMP_FILE}
-echo "Finished setting up custom scripts."
+  # Replace everything between #CUSTOM_SCRIPTS_START and #CUSTOM_SCRIPTS_END with the temp file contents
+  sed -i.bak -e "/${START_TAG}/r ${TEMP_FILE}" ~/.zshrc
 
+  # Source your .zshrc to apply the changes immediately
+  source ~/.zshrc
+
+  rm ${TEMP_FILE}
+  echo "Finished setting up custom scripts."
+
+}
+setup_custom_scripts
+
+setup_tmux() {
+  cp setup/templates/.tmux.conf ~
+}
