@@ -26,3 +26,5 @@ alias gasds="gita super diff --staged --color"
 
 ### tmux
 alias ta="tmux attach"
+
+git config --global core.editor "nvim"
