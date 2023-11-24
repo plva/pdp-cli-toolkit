@@ -50,6 +50,7 @@ setup_custom_scripts() {
   echo 'export PYTHONPATH="${PYTHONPATH}:/Users/paulvasiu/Library/Python/3.9/bin/"' >> "${TEMP_FILE}"
   
   for script_name in $(ls -1); do
+    echo "adding custom script ${script_name}"
     echo "source ${custom_scripts_dir}/${script_name}" >> "${TEMP_FILE}"
   done
 
