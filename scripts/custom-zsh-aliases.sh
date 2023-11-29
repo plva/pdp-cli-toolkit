@@ -3,9 +3,8 @@
 ### pdp build helpers
 alias s="source ~/.zshrc"
 
-### commands
-alias c="clear"
 
+  
 ### python scripts
 alias uniquewords="~/dev/pdp-cli-toolkit/scripts/python/unique_words.py"
 

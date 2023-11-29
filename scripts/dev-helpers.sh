@@ -90,3 +90,10 @@ a() {
    # curl --silent my/"${address}"
    curl --silent -X POST -H 'Content-Type: text/plain' -d "${json_string}" my/"${address}"
 }
+# FUNCTION_DOCUMENTATION_START
+# - clears both zsh and tmux history
+# FUNCTION_DOCUMENTATION_END
+c() {
+    clear
+    tmux clear-history
+}
