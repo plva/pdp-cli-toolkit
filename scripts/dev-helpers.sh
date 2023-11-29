@@ -90,6 +90,20 @@ a() {
    # curl --silent my/"${address}"
    curl --silent -X POST -H 'Content-Type: text/plain' -d "${json_string}" my/"${address}"
 }
+
+print_color() {
+    local text="$1"
+    # 179 is yellowish
+    local color="179"
+    print -P -- "%F{${color}}${text}%f"
+}
+print_bar() {
+    # 179 is yellowish
+    local color="179"
+    print -P -- "%F{${color}}----------------------------------------------------------------------------------------------------%f"
+}
+alias pb="print_bar"
+
 # FUNCTION_DOCUMENTATION_START
 # - clears both zsh and tmux history
 # FUNCTION_DOCUMENTATION_END
