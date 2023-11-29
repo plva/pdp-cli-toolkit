@@ -6,6 +6,9 @@ alias s="source ~/.zshrc"
 ### commands
 alias c="clear"
 
+### python scripts
+alias uniquewords="~/dev/pdp-cli-toolkit/scripts/python/unique_words.py"
+
 ### tools
 alias n="nvim"
 alias t="tree"
@@ -14,8 +17,9 @@ alias m="tmux"
 ### history
 alias h="history"
 # history -tail
-alias ht="history -50 | tail"
-alias fht="history -50 | cut -c 8- | tail -50 | fzf | pbcopy"
+alias ht="history | tail"
+alias fht="histor | cut -c 8- | uniquewords | tail -50 | fzf | pbcopy"
+alias fh="history | cut -c 8- | uniquewords | fzf | pbcopy"
 
 ### git
 alias gs="git status"
@@ -26,4 +30,5 @@ alias gasds="gita super diff --staged --color"
 
 ### tmux
 alias ta="tmux attach"
+alias mux="tmuxinator"
 

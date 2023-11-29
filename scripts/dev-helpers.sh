@@ -56,4 +56,37 @@ pdp_get_project_git_status() {
 pdp_commit_all_with_message() {
   local commit_message=$1
   pdp_get_project_config| jq '.repos[]' | xargs -I {} zsh -ic "echo \"\n\nIN {}\n\" && cd {} && gaa && gc -m \"${commit_message}\""\n
+}  
+
+# FUNCTION_DOCUMENTATION_START
+# - cd with grep (globbing)
+# - if more than one pattern matches, use fzf to select
+# FUNCTION_DOCUMENTATION_END
+cg() {
+  local pattern="$1"
+  local matching_dirs=( *"$pattern"*/ )  # Use () to create an array
+
+  if [ ${#matching_dirs[@]} -eq 1 ]; then
+    cd "${matching_dirs[1]}"
+    return 0
+  elif [ ${#matching_dirs[@]} -gt 1 ]; then
+    local selected_dir=$(printf '%s\n' "${matching_dirs[@]}" | fzf)
+    cd "${selected_dir}"
+    return 0
+  else
+    echo "No matching directory found for '$pattern'"
+    return 1
+  fi
+}
+
+
+# FUNCTION_DOCUMENTATION_START
+# - a stands for api
+# - curl localhost (or my, as defined in etc hosts)
+# FUNCTION_DOCUMENTATION_END
+a() {
+   local address="$1"
+   local json_string="$2"
+   # curl --silent my/"${address}"
+   curl --silent -X POST -H 'Content-Type: text/plain' -d "${json_string}" my/"${address}"
 }

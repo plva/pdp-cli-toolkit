@@ -10,7 +10,7 @@
 source setup/setup-git.sh
 setup_custom_scripts() {
   # Define the directory where custom helper scripts will be stored
-  custom_scripts_dir="$HOME/custom-helper-scripts"
+  local custom_scripts_dir="$HOME/custom-helper-scripts"
 
   # Create the custom scripts directory if it doesn't exist
   mkdir -p "${custom_scripts_dir}"
@@ -19,7 +19,7 @@ setup_custom_scripts() {
   cd ${SCRIPTS_DIR}
 
   # Copy your custom scripts into the custom scripts directory
-  cp * "${custom_scripts_dir}"
+  find . -maxdepth 1 -type f -exec cp {} "${custom_scripts_dir}" \;
 
   START_TAG="# CUSTOM_SCRIPTS_START"
   END_TAG="# CUSTOM_SCRIPTS_END"
@@ -49,8 +49,7 @@ setup_custom_scripts() {
   echo 'export PATH="${PATH}:/Users/paulvasiu/Library/Python/3.9/bin/"' >> "${TEMP_FILE}"
   echo 'export PYTHONPATH="${PYTHONPATH}:/Users/paulvasiu/Library/Python/3.9/bin/"' >> "${TEMP_FILE}"
   
-  for script_name in $(ls -1); do
-    echo "adding custom script ${script_name}"
+  for script_name in $(ls -1 ${custom_scripts_dir}); do
     echo "source ${custom_scripts_dir}/${script_name}" >> "${TEMP_FILE}"
   done
 
@@ -68,4 +67,8 @@ setup_custom_scripts
 
 setup_tmux() {
   cp setup/templates/.tmux.conf ~
+
 }
+
+# Link zshenv to zshrc, so vim loads it
+ln -s ~/.zshrc ~/.zshenv
