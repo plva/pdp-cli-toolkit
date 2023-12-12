@@ -11,7 +11,8 @@ def unique_last_occurrences(words):
             unique_words.append(word)
 
     # Reverse the list to maintain the order of last occurrences
-    return unique_words[::-1]
+    return unique_words
+    # return unique_words[::-1]
 
 def main():
     # Read words from stdin

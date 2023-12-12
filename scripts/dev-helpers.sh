@@ -59,6 +59,14 @@ pdp_commit_all_with_message() {
 }  
 
 # FUNCTION_DOCUMENTATION_START
+# - clears both zsh and tmux history
+# FUNCTION_DOCUMENTATION_END
+c() {
+    clear
+    tmux clear-history
+}
+
+# FUNCTION_DOCUMENTATION_START
 # - cd with grep (globbing)
 # - if more than one pattern matches, use fzf to select
 # FUNCTION_DOCUMENTATION_END
@@ -79,6 +87,39 @@ cg() {
   fi
 }
 
+# FUNCTION_DOCUMENTATION_START
+# - Search for files in the current directory with fzf
+# - Use bat to display the selected file's content
+# FUNCTION_DOCUMENTATION_END
+bg() {
+  # clear the screen
+  c
+  local pattern="$1"
+  local end_pattern=*"$pattern"* 
+  echo "$end_pattern"
+  local matching_files=( *"$pattern"* )  # Use () to create an array
+  echo "matching files: $matching_files"
+  if [ ${#matching_files[@]} -eq 1 ]; then
+    bat --paging=never "${matching_files[1]}"
+    return 0
+  elif [ ${#matching_files[@]} -lt 6 ]; then
+    for selected_file in "${matching_files[@]}"; do
+      if [ -n "$selected_file" ]; then
+        bat --paging=never "$selected_file"
+      fi
+    done
+    return 0
+  else
+    local selected_file=$(printf '%s\n' "${matching_files[@]}" | fzf)
+    if [ -n "$selected_file" ]; then
+      bat --paging=never "$selected_file"
+      return 0
+    else
+      echo "No file selected."
+      return 1
+    fi
+  fi
+}
 
 # FUNCTION_DOCUMENTATION_START
 # - a stands for api
@@ -104,10 +145,3 @@ print_bar() {
 }
 alias pb="print_bar"
 
-# FUNCTION_DOCUMENTATION_START
-# - clears both zsh and tmux history
-# FUNCTION_DOCUMENTATION_END
-c() {
-    clear
-    tmux clear-history
-}

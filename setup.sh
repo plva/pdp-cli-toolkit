@@ -38,13 +38,15 @@ setup_custom_scripts() {
 
   # Save the new custom section to a temporary file
   TEMP_FILE="/tmp/custom_scripts_section.tmp"
-  echo "# Generated code, do not modify" >> "${TEMP_FILE}"
+  echo "# Generated code, do not modify" > "${TEMP_FILE}"
   CLI_HELPERS_DIR="/Users/paulvasiu/dev/pdp-cli-toolkit"
   PDP_BOOTSTRAP_DIR="/Users/paulvasiu/dev/pdp-bootstrap"
 
-  echo "# \`b\` stands for build" >> "${TEMP_FILE}"
-  echo "alias b=\"cd ${CLI_HELPERS_DIR} && ./setup.sh; cd - && s\"" >> "${TEMP_FILE}"
-  echo "alias ba=\"cd ${PDP_BOOTSTRAP_DIR} && ./bootstrap.sh; cd - && b\"" >> "${TEMP_FILE}"
+  echo "# \`setup_cli_toolkit\` stands for build" >> "${TEMP_FILE}"
+  # echo "source ~/repos/zsh-autocomplete/zsh-autocomplete.plugin.zsh" >> "${TEMP_FILE}"
+  echo "alias setup_cli_toolkit=\"cd ${CLI_HELPERS_DIR} && ./setup.sh; cd - && source_zshrc\"" >> "${TEMP_FILE}"
+  # ball = build_all
+  echo "alias ball=\"cd ${PDP_BOOTSTRAP_DIR} && ./bootstrap.sh; cd - && setup_cli_toolkit\"" >> "${TEMP_FILE}"
 
   echo 'export PATH="${PATH}:/Users/paulvasiu/Library/Python/3.9/bin/"' >> "${TEMP_FILE}"
   echo 'export PYTHONPATH="${PYTHONPATH}:/Users/paulvasiu/Library/Python/3.9/bin/"' >> "${TEMP_FILE}"
@@ -53,6 +55,8 @@ setup_custom_scripts() {
     echo "source ${custom_scripts_dir}/${script_name}" >> "${TEMP_FILE}"
   done
 
+  # setup zoxide (must be done at end of config file"
+  echo 'eval "$(zoxide init zsh)"' >> "${TEMP_FILE}"
   # Replace everything between #CUSTOM_SCRIPTS_START and #CUSTOM_SCRIPTS_END with the temp file contents
   sed -i.bak -e "/${START_TAG}/r ${TEMP_FILE}" ~/.zshrc
 
@@ -67,8 +71,33 @@ setup_custom_scripts
 
 setup_tmux() {
   cp setup/templates/.tmux.conf ~
-
 }
 
 # Link zshenv to zshrc, so vim loads it
-ln -s ~/.zshrc ~/.zshenv
+#ln -s ~/.zshrc ~/.zshenv
+
+setup_git_diff_so_fancy() {
+  git config --global core.pager "diff-so-fancy | less --tabs=4 -RF"
+  git config --global interactive.diffFilter "diff-so-fancy --patch"
+
+  git config --global color.ui true
+
+  git config --global color.diff-highlight.oldNormal    "red bold"
+  git config --global color.diff-highlight.oldHighlight "red bold 52"
+  git config --global color.diff-highlight.newNormal    "green bold"
+  git config --global color.diff-highlight.newHighlight "green bold 22"
+
+  git config --global color.diff.meta       "11"
+  git config --global color.diff.frag       "magenta bold"
+  git config --global color.diff.func       "146 bold"
+  git config --global color.diff.commit     "yellow bold"
+  git config --global color.diff.old        "red bold"
+  git config --global color.diff.new        "green bold"
+  git config --global color.diff.whitespace "red reverse"
+}
+setup_git_diff_so_fancy
+
+setup_npm_packages() {
+  npm install -g tldr
+}
+setup_npm_packages
